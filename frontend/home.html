@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Commerce Project</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/fontawesome.min.css" integrity="sha384-wESLQ85D6gbsF459vf1CiZ2+rr+CsxRY0RpiF1tLlQpDnAgg6rwdsUF1+Ics2bni" crossorigin="anonymous">
+    <link rel="stylesheet" href="./style.css">
+    <!-- <script src="/index.js" defer></script> -->
+</head>
+<body>
+    <header>
+        <ul>
+            <li><a href="#">HOME</a></li>
+            <li><a href="./store.html">STORE</a></li>
+            <li><a href="./about.html">ABOUT</a></li>
+            <li><a href="./order.html">ORDER</a></li>
+        </ul>
+        <h1>E-Commerce Website</h1>
+        <button class="latest-album">Get our Latest Album</button>
+        <button class="play-btn">►</button>
+    </header>
+    <section id="tours" class='container'>
+        <h2>TOURS</h2>
+        <div>
+            <div class="tour-item">
+                <span class="tour-date">JUL16</span>
+                <span class="tour-place">DETROIT, MI</span>
+                <span class="tour-spec-place">DTE ENERGY MUSIC THEATRE</span>
+                <button class="buy-btn">BUY TICKETS</button>
+            </div>
+            <div class="tour-item">
+                <span class="tour-date">JUL19</span>
+                <span class="tour-place">TORONTO,ON</span>
+                <span class="tour-spec-place">BUDWEISER STAGE</span>
+                <button class="buy-btn">BUY TICKETS</button>
+            </div>
+            <div class="tour-item">
+                <span class="tour-date">JUL 22</span>
+                <span class="tour-place"> BRISTOW, VA</span>
+                <span class="tour-spec-place">JIGGY LUBE LIVE</span>
+                <button class="buy-btn">BUY TICKETS</button>
+            </div>
+            <div class="tour-item">
+                <span class="tour-date">JUL 29</span>
+                <span class="tour-place">PHOENIX, AZ</span>
+                <span class="tour-spec-place"> AK-CHIN PAVILION</span>
+                <button class="buy-btn">BUY TICKETS</button>
+            </div>
+            <div class="tour-item">
+                <span class="tour-date">AUG 2</span>
+                <span class="tour-place">LAS VEGAS, NV</span>
+                <span class="tour-spec-place">T-MOBILE ARENA</span>
+                <button class="buy-btn">BUY TICKETS</button>
+            </div>
+            <div class="tour-item">
+                <span class="tour-date">AUG 7</span>
+                <span class="tour-place">CONCORD, CA</span>
+                <span class="tour-spec-place"> CONCORD PAVILION</span>
+                <button class="buy-btn">BUY TICKETS</button>
+            </div>
+        </div>
+    </section>
+    <!-- <header>
+        <h6><a href="#">STORE</a></h6>
+        <h1>The Generics</h1>
+    </header> -->
+    <!-- <section id="music" class="container">
+        <h2>MUSIC</h2>
+        <div id ="music-content">
+            <div>
+                <h3>Album 1</h3>
+                <img src="/img/Album 1.png" alt="">
+                <div class="prod-details">
+                    <span>$12.99</span>
+                    <button class="shop-item-button" type='button'>ADD TO CART</button>
+                </div>
+            </div>
+            <div>
+                <h3>Album 2</h3>
+                <img src="/img/Album 2.png" alt="">
+                <div class="prod-details">
+                    <span>$14.99</span>
+                    <button class="shop-item-button" type='button'>ADD TO CART</button>
+                </div>
+            </div>
+            <div>
+                <h3>Album 3</h3>
+                <img src="/img/Album 3.png" alt="">
+                <div class="prod-details">
+                    <span>$9.99</span>
+                    <button class="shop-item-button" type='button'>ADD TO CART</button>
+                </div>
+            </div>
+            <div>
+                <h3>Album 4</h3>
+                <img src="/img/Album 4.png" alt="">
+                <div class="prod-details">
+                    <span>$19.99</span>
+                    <button class="shop-item-button" type='button'>ADD TO CART</button>
+                </div>
+            </div>
+        </div>
+
+    </section>
+    <section id="merch" class="container">
+        <h2>MERCH</h2>
+        <div id="merch-content">
+            <div>
+                <h3>T-Shirt</h3>
+                <img src="/img/Shirt.png" alt="">
+                <div class="prod-details">
+                    <span>$19.99</span>
+                    <button class="shop-item-button" type='button'>ADD TO CART</button>
+                </div>
+            </div>
+            <div>
+                <h3>Coffee Cup</h3>
+                <img src="/img/Cofee.png" alt="">
+                <div class="prod-details">
+                    <span>$6.99</span>
+                    <button class="shop-item-button" type='button'>ADD TO CART</button>
+                </div>
+            </div>
+        </div>
+
+    </section>
+    <section id="cart" class="container">
+        <h2>CART</h2>
+        <div class="cart-row cart-header">
+            <span class='cart-item cart-column'>ITEM</span>
+            <span class='cart-price cart-column'>PRICE</span>
+            <span class='cart-quantity cart-column'>QUANTITY</span>
+        </div>
+        <div class='cart-items'>
+            <div class="cart-row">
+                <span class='cart-item cart-column'>
+                    <img class='cart-img' src="img/Shirt.png" alt="">
+                    <span>T-Shirt</span>
+                </span>
+                <span class='cart-price cart-column'>$19.99</span>
+                <span class='cart-quantity cart-column'>
+                    <input type="text">
+                    <button>REMOVE</button>
+                </span>
+            </div>
+            <div class="cart-row">
+                <span class='cart-item cart-column'>
+                    <img class='cart-img' src="/img/Album 3.png" alt="">
+                    <span>Album 3</span>
+                </span>
+                <span class='cart-price cart-column'>$9.99</span>
+                <span class='cart-quantity cart-column'>
+                    <input type="text">
+                    <button>REMOVE</button>
+                </span>
+            </div>
+        </div>
+        <div class="cart-total">
+            <span>
+                <span class='total-title'> <strong>Total</strong>
+                    </span>
+                <span>$39.99</span>
+            </span>
+        </div>
+        <button class='purchase-btn' type='button'>PURCHASE</button>
+    </section> -->
+    <footer>
+        <div class="footer-title">
+            The Generics
+        </div>
+        <div class="footer-icons">
+            <ul>
+                <li><a href="https://www.youtube.com">
+                    <img src="/img/youtube.jpg" alt="">
+                </a></li>
+                <li><a href="https://spotify.com">
+                    <img src="/img/Spotify Logo.png" alt="">
+                </a></li>
+                <li><a href="https://facebook.com">
+                    <img src="/img/Facebook Logo.png" alt="">
+                </a></li>
+            </ul>
+        </div>
+    </footer>
+</body>
+</html>

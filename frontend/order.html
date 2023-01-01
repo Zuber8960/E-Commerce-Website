@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orders Page</title>
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/fontawesome.min.css"
+        integrity="sha384-wESLQ85D6gbsF459vf1CiZ2+rr+CsxRY0RpiF1tLlQpDnAgg6rwdsUF1+Ics2bni" crossorigin="anonymous">
+    <link rel="stylesheet" href="./style.css">
+    <!-- <script src="./index.js" defer></script> -->
+</head>
+
+<body>
+    <header>
+        <ul>
+            <li><a href="./home.html">HOME</a></li>
+            <li><a href="./store.html">STORE</a></li>
+            <li><a href="./about.html">ABOUT</a></li>
+            <li><a href="#">ORDER</a></li>
+        </ul>
+        <h1>E-Commerce Website</h1>
+        <button id="order-collection">Get The Orders</button>
+    </header>
+    <section id="orders" class='containers'>
+        <h2>Orders</h2>
+        <div id="orderContainer">
+            <div class="order-item">
+                <span class="order-id">Order ID</span>
+                <span class="product">Product Name</span>
+                <span class="product">Product Price</span>
+                <span class="product">Product Quantity</span>
+                <span class="product">Total Price</span>
+                <span class="order-btn">Order Status</span>
+            </div>
+        </div>
+    </section>
+    <footer>
+        <div class="footer-title">
+            E-Commerce Website
+        </div>
+        <div class="footer-icons">
+            <ul>
+                <li><a href="https://www.youtube.com">
+                        <img src="./img/youtube.jpg" alt="">
+                    </a></li>
+                <li><a href="https://spotify.com">
+                        <img src="./img/Spotify Logo.png" alt="">
+                    </a></li>
+                <li><a href="https://facebook.com">
+                        <img src="./img/Facebook Logo.png" alt="">
+                    </a></li>
+            </ul>
+        </div>
+    </footer>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.1/axios.js"></script>
+
+<script>
+
+    const backendApis = "http://localhost:4000";
+
+    let orderContainer = document.getElementById('orderContainer');
+
+    window.addEventListener('DOMContentLoaded', () => {
+        axios.get(`${backendApis}/orders`)
+            .then(responce => {
+                console.log(responce.data);
+                if(! responce.data.length){
+                    let orderSpan = document.createElement('span');
+                    orderSpan.innerHTML = `
+                    <h3>No order placed till now. Place your first order Now.</h3>`;
+                    orderContainer.appendChild(orderSpan);
+                    return;
+                }
+                responce.data.forEach(order => {
+                    // console.log(order.products);
+                    order.products.forEach(product => {
+                        // console.log(`orderId =`, order.id, order.createdAt, `productId =`, product.id, `productTitle =`, product.title, `productQuantity =`, product.orderItem.quantity, `productPrice =`, product.price);
+
+                        const productPrice = parseFloat(product.price * product.orderItem.quantity).toFixed(2);
+                        
+                        let orderDiv = document.createElement('div');
+                        orderDiv.classList.add('order-item');
+
+                       orderDiv.innerHTML = `
+                       <span class="orderId">${order.id}</span>
+                       <span class="productDetails">${product.title}</span>
+                        <span class="productDetails">${product.price} $</span>
+                        <span class="productDetails">${product.orderItem.quantity}</span>
+                        <span class="productDetails">${productPrice} $</span>
+                        <span class="order-btn">Order Successful ✅</span>
+                       `
+
+                        orderContainer.appendChild(orderDiv);
+                    })
+                });
+            })
+            .catch(err => console.log(err))
+    })
+
+
+</script>
+
+</html>
