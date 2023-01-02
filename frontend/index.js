@@ -3,7 +3,7 @@ const cart_items = document.querySelector('#cart .cart-items');
 let total_cart_price = document.querySelector('#total-value').innerText;
 const marchent = document.querySelector('#merch-content');
 const parentContainer = document.getElementById('EcommerceContainer');
-const backendApis = "http://localhost:4000";
+const backendApis = "http://13.114.50.85:4000";
 const pagination = document.querySelector('.pagination');
 
 window.addEventListener('DOMContentLoaded', async () => {
@@ -17,7 +17,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         });
         showPagination(responce.data);
 
-        // let responce = await axios.get("http://localhost:4000/products")
+        // let responce = await axios.get(`${backendApis}/products`)
         // if (responce.request.status === 200) {
         //     responce.data.forEach(element => {
         //         // console.log(element.id, element.title, element.price);
@@ -76,7 +76,7 @@ parentContainer.addEventListener('click', (e) => {
 
         const productId = id.split("-")[1];
         console.log('id =', productId);
-        axios.post("http://localhost:4000/cart", { productId: productId })
+        axios.post(`${backendApis}/cart`, { productId: productId })
             .then((responce) => {
 
                 if (responce.request.status === 200) {
@@ -164,7 +164,7 @@ parentContainer.addEventListener('click', (e) => {
 //getting data from backend for cart by get request.
 showProductInCart = async () => {
     try {
-        let responce = await axios.get("http://localhost:4000/cart");
+        let responce = await axios.get(`${backendApis}/cart`);
 
         if (responce.request.status === 200) {
             let numberOfProductsInCart = 0;
