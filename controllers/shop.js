@@ -170,3 +170,8 @@ exports.getOrders = (req, res, next) => {
 
 
 
+exports.homePage = (req, res, next) => {
+  res.status(200).send(`<html><title>Home Page</title>
+  <h1>Welcome to the Zuber's E-Commerce Website</h1><hr>
+  <b>Go to Home Page</b> <a href=http://${req.hostname}:4000/store.html><button class="btn">Click me</button></a></html>`);
+}

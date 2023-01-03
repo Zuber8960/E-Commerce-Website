@@ -32,6 +32,7 @@
                 <span class="product">Product Price</span>
                 <span class="product">Product Quantity</span>
                 <span class="product">Total Price</span>
+                <span class="product">Order Date</span>
                 <span class="order-btn">Order Status</span>
             </div>
         </div>
@@ -59,7 +60,7 @@
 
 <script>
 
-    const backendApis = "http://13.114.50.85:4000";
+    const backendApis = "http://localhost:4000";
 
     let orderContainer = document.getElementById('orderContainer');
 
@@ -84,12 +85,15 @@
                         let orderDiv = document.createElement('div');
                         orderDiv.classList.add('order-item');
 
+                        const date = order.createdAt.split('T')[0].split('-').reverse().join('-');
+                        console.log(date);
                        orderDiv.innerHTML = `
                        <span class="orderId">${order.id}</span>
                        <span class="productDetails">${product.title}</span>
                         <span class="productDetails">${product.price} $</span>
                         <span class="productDetails">${product.orderItem.quantity}</span>
                         <span class="productDetails">${productPrice} $</span>
+                        <span class="productDetails">${date}</span>
                         <span class="order-btn">Order Successful ✅</span>
                        `
 

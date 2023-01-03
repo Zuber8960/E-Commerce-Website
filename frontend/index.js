@@ -3,7 +3,7 @@ const cart_items = document.querySelector('#cart .cart-items');
 let total_cart_price = document.querySelector('#total-value').innerText;
 const marchent = document.querySelector('#merch-content');
 const parentContainer = document.getElementById('EcommerceContainer');
-const backendApis = "http://13.114.50.85:4000";
+const backendApis = "http://localhost:4000";
 const pagination = document.querySelector('.pagination');
 
 window.addEventListener('DOMContentLoaded', async () => {
