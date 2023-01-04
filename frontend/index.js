@@ -2,9 +2,11 @@
 const cart_items = document.querySelector('#cart .cart-items');
 let total_cart_price = document.querySelector('#total-value').innerText;
 const marchent = document.querySelector('#merch-content');
+const cartContent = document.getElementById('cart-content');
 const parentContainer = document.getElementById('EcommerceContainer');
 const backendApis = "http://localhost:4000";
 const pagination = document.querySelector('.pagination');
+const pagination2 = document.querySelector('.pagination2');
 
 window.addEventListener('DOMContentLoaded', async () => {
     try {
@@ -15,6 +17,7 @@ window.addEventListener('DOMContentLoaded', async () => {
             // console.log(ele);
             showProductOnScreen(ele);
         });
+        await getCartData();
         showPagination(responce.data);
 
         // let responce = await axios.get(`${backendApis}/products`)
@@ -80,18 +83,21 @@ parentContainer.addEventListener('click', (e) => {
             .then((responce) => {
 
                 if (responce.request.status === 200) {
+                    total_cart_price = (+(total_cart_price) + parseFloat(price)).toFixed(2);
                     // console.log(responce.data);
                     notifyOnScreen(responce.data.message);
                     let cartProduct = document.getElementById(`quantity-${productId}`);
                     // console.log('jjjj');
+                    
                     if (cartProduct) {
                         cartProduct.value = +(cartProduct.value) + 1;
-                        console.log(cartProduct.id, cartProduct.value);
-                        total_cart_price = (+(total_cart_price) + parseFloat(price)).toFixed(2);
+                        // console.log(cartProduct.id, cartProduct.value);
+                        
                         document.querySelector('#total-value').innerText = `${total_cart_price}`;
                     } else {
-                        console.log('new product is added to cart');
+                        // console.log('new product is added to cart');
                         let newId = id.split("-")[1];
+
                         addNewProductInCart(newId, name, price, img_src, 1);
                         document.querySelector('.cart-number').innerText++;
                     }
@@ -100,7 +106,6 @@ parentContainer.addEventListener('click', (e) => {
                 }
             })
             .catch(err => {
-                console.log('error');
                 console.log(err);
                 notifyOnScreen(err.message);
             });
@@ -116,8 +121,8 @@ parentContainer.addEventListener('click', (e) => {
 
         axios.post(`${backendApis}/orders`)
             .then(responce => {
-                console.log(responce);
                 if (responce.request.status === 200) {
+                    console.log(responce.data);
                     let orderId = responce.data.orderId;
                     alert(`Congratulations !!! 😊😊👍 \n Your order is placed successfully. \n Your Order ID: ${orderId}`)
                     // notifyOnScreen();
@@ -160,53 +165,6 @@ parentContainer.addEventListener('click', (e) => {
 
 })
 
-
-//getting data from backend for cart by get request.
-showProductInCart = async () => {
-    try {
-        let responce = await axios.get(`${backendApis}/cart`);
-
-        if (responce.request.status === 200) {
-            let numberOfProductsInCart = 0;
-            await responce.data.products.forEach(ele => {
-                addNewProductInCart(ele.id, ele.title, ele.price, ele.imageUrl, ele.cartItem.quantity);
-                numberOfProductsInCart++;
-            })
-            document.querySelector('.cart-number').innerText = numberOfProductsInCart;
-        } else {
-            console.log(responce.data);
-        }
-    } catch (err) {
-        console.log(err);
-    }
-}
-
-
-//adding some functionallity and styling for that product which is added to cart.
-function addNewProductInCart(id, title, price, imageUrl, quantity) {
-    const cart_item = document.createElement('div');
-
-    cart_item.classList.add('cart-row');
-    cart_item.setAttribute('id', `in-cart-${id}`);
-    const updatedPrice = price * quantity;
-
-    total_cart_price = parseFloat(total_cart_price) + parseFloat(updatedPrice);
-    total_cart_price = total_cart_price.toFixed(2);
-
-    document.querySelector('#total-value').innerText = `${total_cart_price}`;
-    cart_item.innerHTML = `
-        <span class='cart-item cart-column'>
-            <img class='cart-img' src="${imageUrl}" alt="">
-            <span>${title}</span>
-        </span>
-        <span class='cart-price cart-column'>${price}</span>
-        <span class='cart-quantity cart-column'>
-            <input type="text" value="${quantity}" id="quantity-${id}">
-            <button>REMOVE</button>
-        </span>`
-    cart_items.appendChild(cart_item);
-}
-
 function showPagination({
     currentPage,
     hasNextPage,
@@ -227,7 +185,7 @@ function showPagination({
         });
         let span = document.createElement('span');
         span.innerText = `........`
-        
+
         pagination.appendChild(btn4);
         pagination.appendChild(span);
     }
@@ -262,7 +220,7 @@ function showPagination({
         pagination.appendChild(btn3);
     }
 
-    if (currentPage != lastPage && nextPage!=lastPage) {
+    if (currentPage != lastPage && nextPage != lastPage) {
         const btn4 = document.createElement('button');
         btn4.classList.add('btn');
         btn4.innerHTML = lastPage;
@@ -297,4 +255,158 @@ function notifyOnScreen(massage) {
     setTimeout(() => {
         notification.remove();
     }, 2500)
+}
+
+
+//getting data from backend for cart by get request.
+showProductInCart = async () => {
+    try {
+        const page = 1;
+        let responce = await axios.get(`${backendApis}/cart?page=${page}`);
+
+
+        if (responce.request.status === 200) {
+            await getCartData();
+            // let numberOfProductsInCart = 0;
+            // console.log(responce.data);
+            await responce.data.products.forEach((ele) => {
+                addNewProductInCart(ele.id, ele.title, ele.price, ele.imageUrl, ele.cartItem.quantity);
+                // numberOfProductsInCart++;
+            })
+            if (cart_items.innerHTML == "") {
+                return pagination2.innerHTML = null;
+            };
+            showPaginationForCart(responce.data);
+
+            // document.querySelector('.cart-number').innerText = numberOfProductsInCart;
+        } else {
+            console.log(responce.data);
+        }
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+//adding some functionallity and styling for that product which is added to cart.
+function addNewProductInCart(id, title, price, imageUrl, quantity) {
+    const cart_item = document.createElement('div');
+
+    cart_item.classList.add('cart-row');
+    cart_item.setAttribute('id', `in-cart-${id}`);
+    // const updatedPrice = price * quantity;
+
+    // total_cart_price = parseFloat(total_cart_price) + parseFloat(updatedPrice);
+    // total_cart_price = total_cart_price.toFixed(2);
+
+    document.querySelector('#total-value').innerText = `${total_cart_price}`;
+    cart_item.innerHTML = `
+        <span class='cart-item cart-column'>
+            <img class='cart-img' src="${imageUrl}" alt="">
+            <span>${title}</span>
+        </span>
+        <span class='cart-price cart-column'>${price}</span>
+        <span class='cart-quantity cart-column'>
+            <input type="text" value="${quantity}" id="quantity-${id}">
+            <button>REMOVE</button>
+        </span>`
+    cart_items.appendChild(cart_item);
+}
+
+
+function showPaginationForCart({
+    currentPage,
+    hasNextPage,
+    nextPage,
+    hasPreviousPage,
+    previousPage,
+    lastPage
+}) {
+    pagination2.innerHTML = "";
+
+    if (currentPage != 1 && previousPage != 1) {
+        const btn4 = document.createElement('button');
+        btn4.classList.add('btn');
+        btn4.innerHTML = 1;
+        btn4.addEventListener('click', () => {
+            cart_items.innerHTML = "";
+            getCarts(1);
+        });
+        let span = document.createElement('span');
+        span.innerText = `........`
+
+        pagination2.appendChild(btn4);
+        pagination2.appendChild(span);
+    }
+
+    if (hasPreviousPage) {
+        const btn2 = document.createElement('button');
+        btn2.innerHTML = previousPage;
+        btn2.classList.add('btn');
+        btn2.addEventListener('click', () => {
+            cart_items.innerHTML = "";
+            getCarts(previousPage);
+        });
+        pagination2.appendChild(btn2);
+    }
+    const btn1 = document.createElement('button');
+    btn1.classList.add('btn');
+    btn1.innerHTML = currentPage;
+    btn1.addEventListener('click', () => {
+        cart_items.innerHTML = "";
+        getCarts(currentPage);
+    });
+    pagination2.appendChild(btn1);
+
+    if (hasNextPage) {
+        const btn3 = document.createElement('button');
+        btn3.innerHTML = nextPage;
+        btn3.classList.add('btn');
+        btn3.addEventListener('click', () => {
+            cart_items.innerHTML = "";
+            getCarts(nextPage);
+        });
+        pagination2.appendChild(btn3);
+    }
+
+    if (currentPage != lastPage && nextPage != lastPage) {
+        const btn4 = document.createElement('button');
+        btn4.classList.add('btn');
+        btn4.innerHTML = lastPage;
+        btn4.addEventListener('click', () => {
+            cart_items.innerHTML = "";
+            getCarts(lastPage);
+        });
+        let span = document.createElement('span');
+        span.innerText = `........`
+        pagination2.appendChild(span);
+        pagination2.appendChild(btn4);
+    }
+}
+
+
+function getCarts(page) {
+    axios.get(`${backendApis}/cart?page=${page}`)
+        .then(responce => {
+            // total_cart_price = 0.00;
+            responce.data.products.forEach(ele => {
+                addNewProductInCart(ele.id, ele.title, ele.price, ele.imageUrl, ele.cartItem.quantity);
+            })
+        })
+        .catch(err => console.log(err))
+}
+
+
+getCartData = async () => {
+    try {
+        let responce = await axios.get(`${backendApis}/cartPage`);
+        document.querySelector('.cart-number').innerText = responce.data.products.length;
+        let total = 0;
+        // console.log(responce.data.products);
+        await responce.data.products.forEach(ele => {
+            total = (parseFloat(total) + parseFloat((+ele.price) * (+ele.cartItem.quantity))).toFixed(2);
+        })
+        total_cart_price = total;
+    } catch (err) {
+        console.log(err)
+    }
 }

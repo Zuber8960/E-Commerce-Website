@@ -1,5 +1,6 @@
 const Product = require('../models/product');
 const Cart = require('../models/cart');
+const CartItem = require('../models/cart-item');
 
 const Items_per_page = 2;
 
@@ -12,6 +13,7 @@ exports.getProducts = async (req, res, next) => {
     limit: Items_per_page
   })
     .then(products => {
+      // console.log(`totalItems==`,totalItems);
       res.status(200).json({
         products: products,
         currentPage: page,
@@ -28,20 +30,40 @@ exports.getProducts = async (req, res, next) => {
 };
 
 
-exports.getCart = (req, res, next) => {
+exports.getCart = async (req, res, next) => {
+  const page = +req.query.page || 1;
+  let carts = await req.user.getCart({ include: ['products'] });
 
-  req.user
+  let totalItems = carts.products.length;
+
+  // console.log(`totalItems==`,totalItems);
+  // carts.forEach(ele => {
+  //   console.log(`prods===>`,ele.products);
+  // })
+
+  await req.user
     .getCart()
     .then(cart => {
-      // console.log(cart);
       return cart
-        .getProducts()
+        .getProducts({
+          offset: (page - 1) * Items_per_page,
+          limit: Items_per_page
+        })
         .then(products => {
-          res.status(200).json({ success: true, products: products });
+          // console.log(products);
+          res.status(200).json({
+            products: products,
+            currentPage: page,
+            hasNextPage: Items_per_page * page < totalItems,
+            nextPage: page + 1,
+            hasPreviousPage: page > 1,
+            previousPage: page - 1,
+            lastPage: Math.ceil(totalItems / Items_per_page)
+          })
         })
         .catch(err => {
           console.log(err);
-          res.status(500).json({ success : false, products: `Error Occured`});
+          res.status(500).json({ success: false, products: `Error Occured` });
         })
     })
     .catch(err => console.log(err));
@@ -60,7 +82,7 @@ exports.postCart = (req, res, next) => {
   req.user
     .getCart()
     .then(cart => {
-      console.log('hi', cart);
+      // console.log('hi', cart);
       fetchedCart = cart;
       return cart.getProducts({ where: { id: prodId } })
     })
@@ -82,7 +104,7 @@ exports.postCart = (req, res, next) => {
       return product;
     })
     .then(product => {
-      res.status(200).json({ success: true, message: `Product: ${product.title} added to the cart Successfully.`});
+      res.status(200).json({ success: true, message: `Product: ${product.title} added to the cart Successfully.` });
     })
     .catch(err => {
       console.log(err);
@@ -160,7 +182,7 @@ exports.createOrder = async (req, res, next) => {
 
 
 exports.getOrders = (req, res, next) => {
-  req.user.getOrders({ include: ['products'] }) 
+  req.user.getOrders({ include: ['products'] })
     .then(orders => {
       // console.log(orders);
       res.status(200).json(orders);
@@ -168,7 +190,17 @@ exports.getOrders = (req, res, next) => {
     .catch(err => console.log(err))
 };
 
-
+exports.itemsInCart = (req, res, next) => {
+  req.user
+  .getCart({include : ['products']})
+  .then(cart => {
+    res.status(200).json({products : cart.products});
+  })
+  .catch(err => {
+    console.log(err);
+    res.status(500).json({error : `Something went wrong`});
+  });
+}
 
 exports.homePage = (req, res, next) => {
   res.status(200).send(`<html><title>Home Page</title>

@@ -67,7 +67,7 @@
     window.addEventListener('DOMContentLoaded', () => {
         axios.get(`${backendApis}/orders`)
             .then(responce => {
-                console.log(responce.data);
+                // console.log(responce.data);
                 if(! responce.data.length){
                     let orderSpan = document.createElement('span');
                     orderSpan.innerHTML = `
@@ -86,10 +86,10 @@
                         orderDiv.classList.add('order-item');
 
                         const date = order.createdAt.split('T')[0].split('-').reverse().join('-');
-                        console.log(date);
+                        // console.log(date);
                        orderDiv.innerHTML = `
                        <span class="orderId">${order.id}</span>
-                       <span class="productDetails">${product.title}</span>
+                       <span class="productTitle">${product.title}</span>
                         <span class="productDetails">${product.price} $</span>
                         <span class="productDetails">${product.orderItem.quantity}</span>
                         <span class="productDetails">${productPrice} $</span>

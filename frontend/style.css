@@ -25,6 +25,9 @@ header h1{
     padding:40px;
     font-size:100px;
 }
+header h1:hover{
+    color:#56CCF2;
+}
 header ul{
     display:flex;
     padding:10px;
@@ -45,6 +48,12 @@ header li{
 header li a{
     text-decoration: none;
     color:white;
+}
+header li:hover,
+header ul a:hover{
+    transform: scale(1.2);
+    color: #56CCF2;
+    border-color: rgb(79, 209, 90);
 }
 header h6{
     padding:10px;
@@ -506,6 +515,14 @@ header ul a{
     /* padding-left: 5px; */
     text-align: center;
 }
+
+#orders .order-item .productTitle{
+    width:20%;
+    font-weight: 800;
+    padding-left: 5px;
+    /* text-align: center; */
+}
+
 #orders .order-item .order-btn{
     width:30%;
     background: #56CCF2;
@@ -527,13 +544,13 @@ header ul a{
     font-weight: 1100px ;
 }
 #orders .order-item .productDetails:hover,
+#orders .order-item .productTitle:hover,
 #orders .order-item .orderId:hover{
-    color: rgb(117, 14, 54);
-    transform: scale(1.1);
+    color: white;
+    transform: scale(1.2);
 }
 #orders .order-item:hover{
-    transform: scale(1.2);
-    background-color: #50c223;
+    background-color: #13b80e;
     cursor: pointer;
 }
 header #order-collection{
@@ -547,5 +564,4 @@ header #order-collection{
     cursor: pointer;
     color:white;
 }
-
 
