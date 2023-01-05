@@ -261,14 +261,15 @@ function notifyOnScreen(massage) {
 //getting data from backend for cart by get request.
 showProductInCart = async () => {
     try {
+        await getCartData();
         const page = 1;
         let responce = await axios.get(`${backendApis}/cart?page=${page}`);
 
 
         if (responce.request.status === 200) {
-            await getCartData();
+            
             // let numberOfProductsInCart = 0;
-            // console.log(responce.data);
+            console.log(responce.data);
             await responce.data.products.forEach((ele) => {
                 addNewProductInCart(ele.id, ele.title, ele.price, ele.imageUrl, ele.cartItem.quantity);
                 // numberOfProductsInCart++;
@@ -276,8 +277,7 @@ showProductInCart = async () => {
             if (cart_items.innerHTML == "") {
                 return pagination2.innerHTML = null;
             };
-            showPaginationForCart(responce.data);
-
+            return showPaginationForCart(responce.data);
             // document.querySelector('.cart-number').innerText = numberOfProductsInCart;
         } else {
             console.log(responce.data);
@@ -350,7 +350,7 @@ function showPaginationForCart({
     }
     const btn1 = document.createElement('button');
     btn1.classList.add('btn');
-    btn1.innerHTML = currentPage;
+    btn1.innerHTML = `<h3>${currentPage}</h3>`;
     btn1.addEventListener('click', () => {
         cart_items.innerHTML = "";
         getCarts(currentPage);
@@ -378,6 +378,7 @@ function showPaginationForCart({
         });
         let span = document.createElement('span');
         span.innerText = `........`
+
         pagination2.appendChild(span);
         pagination2.appendChild(btn4);
     }
@@ -388,9 +389,11 @@ function getCarts(page) {
     axios.get(`${backendApis}/cart?page=${page}`)
         .then(responce => {
             // total_cart_price = 0.00;
+            // console.log(`hello`,responce.data);
             responce.data.products.forEach(ele => {
                 addNewProductInCart(ele.id, ele.title, ele.price, ele.imageUrl, ele.cartItem.quantity);
             })
+            showPaginationForCart(responce.data);
         })
         .catch(err => console.log(err))
 }
@@ -405,7 +408,7 @@ getCartData = async () => {
         await responce.data.products.forEach(ele => {
             total = (parseFloat(total) + parseFloat((+ele.price) * (+ele.cartItem.quantity))).toFixed(2);
         })
-        total_cart_price = total;
+        return total_cart_price = total;
     } catch (err) {
         console.log(err)
     }
