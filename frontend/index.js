@@ -84,16 +84,16 @@ parentContainer.addEventListener('click', (e) => {
 
                 if (responce.request.status === 200) {
                     total_cart_price = (+(total_cart_price) + parseFloat(price)).toFixed(2);
-                    // console.log(responce.data);
+                    console.log(responce.data);
                     notifyOnScreen(responce.data.message);
                     let cartProduct = document.getElementById(`quantity-${productId}`);
                     // console.log('jjjj');
-                    
-                    if (cartProduct) {
-                        cartProduct.value = +(cartProduct.value) + 1;
-                        // console.log(cartProduct.id, cartProduct.value);
-                        
-                        document.querySelector('#total-value').innerText = `${total_cart_price}`;
+                    // console.log(responce.data.alreadyInCart);
+                    if (responce.data.alreadyInCart) {
+                        if (cartProduct) {
+                            cartProduct.value = +(cartProduct.value) + 1;
+                            document.querySelector('#total-value').innerText = `${total_cart_price}`;
+                        }
                     } else {
                         // console.log('new product is added to cart');
                         let newId = id.split("-")[1];
@@ -101,6 +101,19 @@ parentContainer.addEventListener('click', (e) => {
                         addNewProductInCart(newId, name, price, img_src, 1);
                         document.querySelector('.cart-number').innerText++;
                     }
+
+                    // if (cartProduct) {
+                    //     cartProduct.value = +(cartProduct.value) + 1;
+                    //     // console.log(cartProduct.id, cartProduct.value);
+
+                    //     document.querySelector('#total-value').innerText = `${total_cart_price}`;
+                    // } else {
+                    //     // console.log('new product is added to cart');
+                    //     let newId = id.split("-")[1];
+
+                    //     addNewProductInCart(newId, name, price, img_src, 1);
+                    //     document.querySelector('.cart-number').innerText++;
+                    // }
                 } else {
                     console.log(responce.data);
                 }
@@ -267,7 +280,7 @@ showProductInCart = async () => {
 
 
         if (responce.request.status === 200) {
-            
+
             // let numberOfProductsInCart = 0;
             console.log(responce.data);
             await responce.data.products.forEach((ele) => {
@@ -389,7 +402,7 @@ function getCarts(page) {
     axios.get(`${backendApis}/cart?page=${page}`)
         .then(responce => {
             // total_cart_price = 0.00;
-            // console.log(`hello`,responce.data);
+            console.log(`hello`, responce.data);
             responce.data.products.forEach(ele => {
                 addNewProductInCart(ele.id, ele.title, ele.price, ele.imageUrl, ele.cartItem.quantity);
             })

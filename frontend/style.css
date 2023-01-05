@@ -565,3 +565,16 @@ header #order-collection{
     color:white;
 }
 
+/* #homepage div{
+    display:flex;
+} */
+#homepage{
+    max-width:900px;
+    margin: 60px auto;
+    font-size: 22px;
+    text-align: center;
+}
+
+#HomepageFooter{
+    margin-top: 180px;
+}

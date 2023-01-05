@@ -31,7 +31,7 @@ exports.getProducts = async (req, res, next) => {
 
 
 exports.getCart = async (req, res, next) => {
-  const page = +req.query.page || 1;
+  let page = +req.query.page || 1;
   let carts = await req.user.getCart({ include: ['products'] });
 
   let totalItems = carts.products.length;
@@ -44,6 +44,11 @@ exports.getCart = async (req, res, next) => {
   await req.user
     .getCart()
     .then(cart => {
+      if(page > (totalItems/Items_per_page)){
+        if(totalItems){
+        page = Math.ceil(totalItems / Items_per_page);
+        }
+      }
       return cart
         .getProducts({
           offset: (page - 1) * Items_per_page,
@@ -79,6 +84,7 @@ exports.postCart = (req, res, next) => {
 
   let fetchedCart;
   let newQuantity = 1;
+  let ifProductInCart = false;
   req.user
     .getCart()
     .then(cart => {
@@ -89,6 +95,7 @@ exports.postCart = (req, res, next) => {
     .then(products => {
       let product;
       if (products.length) {
+        ifProductInCart = true;
         product = products[0];
         const oldQuantity = product.cartItem.quantity;
         newQuantity = oldQuantity + 1;
@@ -104,7 +111,8 @@ exports.postCart = (req, res, next) => {
       return product;
     })
     .then(product => {
-      res.status(200).json({ success: true, message: `Product: ${product.title} added to the cart Successfully.` });
+      console.log(product);
+      res.status(200).json({ success: true, message: `Product: ${product.title} added to the cart Successfully.`, data: product, alreadyInCart: ifProductInCart });
     })
     .catch(err => {
       console.log(err);
@@ -202,8 +210,13 @@ exports.itemsInCart = (req, res, next) => {
   });
 }
 
+// exports.homePage = (req, res, next) => {
+//   res.status(200).send(`<html><title>Home Page</title>
+//   <h1>Welcome to the Zuber's E-Commerce Website</h1><hr>
+//   <b>Go to Home Page</b> <a href=http://${req.hostname}:4000/store.html><button class="btn">Click me</button></a></html>`);
+// }
+
+const path = require('path');
 exports.homePage = (req, res, next) => {
-  res.status(200).send(`<html><title>Home Page</title>
-  <h1>Welcome to the Zuber's E-Commerce Website</h1><hr>
-  <b>Go to Home Page</b> <a href=http://${req.hostname}:4000/store.html><button class="btn">Click me</button></a></html>`);
+  res.status(200).sendFile(path.join(__dirname,'../','frontend','/homepage.html'));
 }
