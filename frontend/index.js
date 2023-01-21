@@ -12,21 +12,11 @@ window.addEventListener('DOMContentLoaded', async () => {
     try {
         const page = 1;
         let responce = await axios.get(`${backendApis}/products?page=${page}`);
-        // console.log("hi", responce.data);
         await responce.data.products.forEach(ele => {
-            // console.log(ele);
             showProductOnScreen(ele);
         });
         await getCartData();
         showPagination(responce.data);
-
-        // let responce = await axios.get(`${backendApis}/products`)
-        // if (responce.request.status === 200) {
-        //     responce.data.forEach(element => {
-        //         // console.log(element.id, element.title, element.price);
-        //         showProductOnScreen(element);
-        //     })
-        // }
     } catch (err) {
         console.log(err);
     }
@@ -78,42 +68,27 @@ parentContainer.addEventListener('click', (e) => {
 
 
         const productId = id.split("-")[1];
-        console.log('id =', productId);
         axios.post(`${backendApis}/cart`, { productId: productId })
             .then((responce) => {
 
                 if (responce.request.status === 200) {
                     total_cart_price = (+(total_cart_price) + parseFloat(price)).toFixed(2);
-                    console.log(responce.data);
+                    
                     notifyOnScreen(responce.data.message);
                     let cartProduct = document.getElementById(`quantity-${productId}`);
-                    // console.log('jjjj');
-                    // console.log(responce.data.alreadyInCart);
+                    
+                    
                     if (responce.data.alreadyInCart) {
                         if (cartProduct) {
                             cartProduct.value = +(cartProduct.value) + 1;
                             document.querySelector('#total-value').innerText = `${total_cart_price}`;
                         }
                     } else {
-                        // console.log('new product is added to cart');
                         let newId = id.split("-")[1];
 
                         addNewProductInCart(newId, name, price, img_src, 1);
                         document.querySelector('.cart-number').innerText++;
                     }
-
-                    // if (cartProduct) {
-                    //     cartProduct.value = +(cartProduct.value) + 1;
-                    //     // console.log(cartProduct.id, cartProduct.value);
-
-                    //     document.querySelector('#total-value').innerText = `${total_cart_price}`;
-                    // } else {
-                    //     // console.log('new product is added to cart');
-                    //     let newId = id.split("-")[1];
-
-                    //     addNewProductInCart(newId, name, price, img_src, 1);
-                    //     document.querySelector('.cart-number').innerText++;
-                    // }
                 } else {
                     console.log(responce.data);
                 }
@@ -135,13 +110,15 @@ parentContainer.addEventListener('click', (e) => {
         axios.post(`${backendApis}/orders`)
             .then(responce => {
                 if (responce.request.status === 200) {
-                    console.log(responce.data);
+                    // console.log(responce.data);
                     let orderId = responce.data.orderId;
-                    alert(`Congratulations !!! 😊😊👍 \n Your order is placed successfully. \n Your Order ID: ${orderId}`)
+                    alert(`Congratulations !!! 😊😊👍 \n Your order is placed successfully. `);
+                    alert(`Check Order page to track your order.\n Your Order ID: ${orderId}`);
                     // notifyOnScreen();
                     cart_items.innerHTML = ""
                     document.querySelector('.cart-number').innerText = 0;
                     document.querySelector('#total-value').innerText = `0.00`;
+                    pagination2.innerHTML = "";
                 } else {
                     alert(responce.data.message);
                 }
@@ -150,8 +127,6 @@ parentContainer.addEventListener('click', (e) => {
                 console.log(err);
 
             });
-
-        // alert('Thanks for the purchase')
 
     }
 
@@ -164,7 +139,7 @@ parentContainer.addEventListener('click', (e) => {
             axios.post(`${backendApis}/cart-delete-item`, { productId: qId })
                 .then(res => {
                     if (res.request.status === 200) {
-                        console.log(res.data);
+                        // console.log(res.data);
                         notifyOnScreen(res.data.message);
                         // let total_cart_price = document.querySelector('#total-value').innerText;
                         total_cart_price = parseFloat(total_cart_price).toFixed(2) - (parseFloat(document.querySelector(`#${productId} .cart-price`).innerText) * parseFloat(document.getElementById(`quantity-${qId}`).value)).toFixed(2);
@@ -278,11 +253,8 @@ showProductInCart = async () => {
         const page = 1;
         let responce = await axios.get(`${backendApis}/cart?page=${page}`);
 
-
         if (responce.request.status === 200) {
 
-            // let numberOfProductsInCart = 0;
-            console.log(responce.data);
             await responce.data.products.forEach((ele) => {
                 addNewProductInCart(ele.id, ele.title, ele.price, ele.imageUrl, ele.cartItem.quantity);
                 // numberOfProductsInCart++;
@@ -294,9 +266,11 @@ showProductInCart = async () => {
             // document.querySelector('.cart-number').innerText = numberOfProductsInCart;
         } else {
             console.log(responce.data);
+            throw new Error(responce.data);
         }
     } catch (err) {
         console.log(err);
+        throw new Error(err);
     }
 }
 
@@ -306,10 +280,6 @@ function addNewProductInCart(id, title, price, imageUrl, quantity) {
 
     cart_item.classList.add('cart-row');
     cart_item.setAttribute('id', `in-cart-${id}`);
-    // const updatedPrice = price * quantity;
-
-    // total_cart_price = parseFloat(total_cart_price) + parseFloat(updatedPrice);
-    // total_cart_price = total_cart_price.toFixed(2);
 
     document.querySelector('#total-value').innerText = `${total_cart_price}`;
     cart_item.innerHTML = `
@@ -401,8 +371,6 @@ function showPaginationForCart({
 function getCarts(page) {
     axios.get(`${backendApis}/cart?page=${page}`)
         .then(responce => {
-            // total_cart_price = 0.00;
-            console.log(`hello`, responce.data);
             responce.data.products.forEach(ele => {
                 addNewProductInCart(ele.id, ele.title, ele.price, ele.imageUrl, ele.cartItem.quantity);
             })
