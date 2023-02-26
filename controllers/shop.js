@@ -111,7 +111,7 @@ exports.postCart = (req, res, next) => {
       return product;
     })
     .then(product => {
-      console.log(product);
+      // console.log(product);
       res.status(200).json({ success: true, message: `Product: ${product.title} added to the cart Successfully.`, data: product, alreadyInCart: ifProductInCart });
     })
     .catch(err => {
@@ -157,6 +157,8 @@ exports.createOrder = async (req, res, next) => {
       })
       .catch(err => console.log(err))
 
+      // console.log(JSON.parse(JSON.stringify(products)));
+      // console.log("<======================================")
     await req.user
       .createOrder()
       .then(order => {
